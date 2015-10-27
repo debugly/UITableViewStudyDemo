@@ -31,10 +31,10 @@
 
     UIBarButtonItem *addButton = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAdd target:self action:@selector(insertNewObject:)];
     self.navigationItem.rightBarButtonItem = addButton;
-}
-
-- (void)viewDidAppear:(BOOL)animated
-{
+//    支持多选；
+//    self.tableView.allowsMultipleSelectionDuringEditing = YES;
+//    编辑的时候允许选择；
+//    self.tableView.allowsSelectionDuringEditing = YES;
     for (int i = 0; i < 20; i ++) {
         [self insertNewObject:nil];
     }
@@ -50,6 +50,11 @@
 }
 
 #pragma mark - Segues
+
+- (BOOL)shouldPerformSegueWithIdentifier:(NSString *)identifier sender:(nullable id)sender
+{
+    return !self.isEditing;
+}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showDetail"]) {
@@ -80,6 +85,7 @@
 
 - (UITableViewCellEditingStyle)tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+//    return UITableViewCellEditingStyleDelete | UITableViewCellEditingStyleInsert;
     return self.editingStyle;
 }
 
@@ -87,7 +93,7 @@
 {
     if (editing) {
         self.editingStyle = self.editingStyle + 1;
-        if (UITableViewCellEditingStyleInsert < self.editingStyle) {
+        if (UITableViewCellEditingStyleInsert + UITableViewCellEditingStyleDelete < self.editingStyle) {
             self.editingStyle = UITableViewCellEditingStyleNone;
         }
         self.title = [self editingStyle2DescString];
@@ -117,6 +123,7 @@
             return @"None Style";
         }
     }
+    return @"Multiple Select";
 }
 
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -139,4 +146,13 @@
     }
 }
 
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+}
+
+- (void)tableView:(UITableView *)tableView didDeselectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+
+}
 @end

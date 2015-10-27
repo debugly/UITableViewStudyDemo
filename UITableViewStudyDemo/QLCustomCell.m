@@ -53,6 +53,7 @@
             }
         }
     }
+    
     [super setEditing:editing animated:animated];
 }
 
